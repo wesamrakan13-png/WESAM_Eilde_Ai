@@ -1,575 +1,65 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>WESAM-ELITE | Royal Academy</title>
-  <style>
-    :root{
-      --bg:#050505;
-      --panel:#0b0b0b;
-      --panel-2:#111;
-      --gold:#d4af37;
-      --gold-2:#f0d87a;
-      --text:#ffffff;
-      --muted:#b7b7b7;
-      --line:rgba(212,175,55,.25);
-      --good:#27d17f;
-      --bad:#ff6b6b;
-      --shadow:0 0 30px rgba(212,175,55,.16);
-      --radius:22px;
-    }
-    *{box-sizing:border-box}
-    html,body{margin:0;padding:0;background:
-      radial-gradient(circle at top, rgba(212,175,55,.10), transparent 35%),
-      linear-gradient(180deg, #040404 0%, #070707 100%);
-      color:var(--text);font-family:Segoe UI,Tahoma,Geneva,Verdana,sans-serif;min-height:100%}
-    body{overflow-x:hidden}
-    .app{
-      max-width:1400px;
-      margin:0 auto;
-      padding:24px;
-    }
-    .topbar{
-      display:flex;gap:16px;align-items:center;justify-content:space-between;
-      background:rgba(10,10,10,.88);
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      padding:18px 22px;
-      box-shadow:var(--shadow);
-      backdrop-filter:blur(10px);
-    }
-    .brand{display:flex;gap:14px;align-items:center}
-    .emblem{
-      width:52px;height:52px;border-radius:16px;
-      display:grid;place-items:center;
-      background:linear-gradient(145deg, rgba(212,175,55,.22), rgba(212,175,55,.06));
-      border:1px solid rgba(212,175,55,.35);
-      color:var(--gold);
-      font-size:1.35rem;
-      box-shadow:inset 0 0 20px rgba(212,175,55,.12);
-    }
-    .brand h1{margin:0;font-size:1.35rem;letter-spacing:2px;color:var(--gold)}
-    .brand p{margin:4px 0 0;color:var(--muted);font-size:.92rem}
-    .stats{display:flex;gap:14px;flex-wrap:wrap;justify-content:flex-end}
-    .stat{
-      min-width:120px;
-      background:var(--panel);
-      border:1px solid var(--line);
-      border-radius:16px;
-      padding:12px 14px;
-      text-align:center;
-    }
-    .stat .label{display:block;color:var(--muted);font-size:.8rem;margin-bottom:6px}
-    .stat .value{color:var(--gold);font-weight:700;font-size:1.05rem}
-
-    .hero{
-      margin-top:22px;
-      display:grid;
-      grid-template-columns:1.2fr .8fr;
-      gap:18px;
-    }
-    .card{
-      background:linear-gradient(180deg, rgba(17,17,17,.95), rgba(9,9,9,.95));
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      padding:22px;
-    }
-    .hero h2{margin:0 0 8px;font-size:2rem;color:#fff}
-    .hero .lead{margin:0;color:var(--muted);line-height:1.8}
-    .progress-wrap{margin-top:18px}
-    .bar{
-      height:14px;border-radius:999px;background:#1a1a1a;overflow:hidden;border:1px solid rgba(212,175,55,.18)
-    }
-    .bar > span{
-      display:block;height:100%;width:0%;
-      background:linear-gradient(90deg, var(--gold), var(--gold-2));
-      box-shadow:0 0 16px rgba(212,175,55,.35);
-      transition:width .35s ease;
-    }
-    .hero-grid{
-      display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:16px
-    }
-    .mini{
-      background:var(--panel-2);border:1px solid rgba(212,175,55,.18);border-radius:16px;padding:14px
-    }
-    .mini .t{color:var(--muted);font-size:.82rem}
-    .mini .n{margin-top:6px;color:#fff;font-size:1.05rem;font-weight:700}
-
-    .layout{
-      margin-top:18px;
-      display:grid;
-      grid-template-columns:320px 1fr 360px;
-      gap:18px;
-      align-items:start;
-    }
-    .section-title{margin:0 0 14px;font-size:1.05rem;color:var(--gold);letter-spacing:1px}
-    .path-btn{
-      width:100%;
-      border:1px solid rgba(212,175,55,.2);
-      background:#0d0d0d;
-      color:#fff;
-      padding:14px 16px;
-      border-radius:16px;
-      cursor:pointer;
-      text-align:right;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      margin-bottom:12px;
-      transition:.2s;
-    }
-    .path-btn:hover,.path-btn.active{
-      transform:translateY(-1px);
-      border-color:rgba(212,175,55,.55);
-      box-shadow:0 0 0 1px rgba(212,175,55,.08), 0 0 20px rgba(212,175,55,.08);
-    }
-    .path-btn small{color:var(--muted)}
-    .roadmap{display:flex;flex-direction:column;gap:12px}
-    .level{
-      border:1px solid rgba(212,175,55,.18);
-      background:rgba(13,13,13,.95);
-      border-radius:18px;
-      padding:16px;
-      position:relative;
-      overflow:hidden;
-    }
-    .level.locked{opacity:.55}
-    .level.completed{border-color:rgba(39,209,127,.4)}
-    .level-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
-    .level h4{margin:0 0 6px;font-size:1rem}
-    .level p{margin:0;color:var(--muted);line-height:1.6;font-size:.92rem}
-    .badge{
-      display:inline-flex;align-items:center;gap:6px;
-      border-radius:999px;
-      padding:6px 10px;
-      font-size:.75rem;
-      background:rgba(212,175,55,.12);
-      color:var(--gold);
-      border:1px solid rgba(212,175,55,.22);
-      white-space:nowrap;
-    }
-    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
-    .btn{
-      border:none;cursor:pointer;
-      background:linear-gradient(180deg, var(--gold), #b88f23);
-      color:#000;font-weight:800;
-      padding:11px 14px;border-radius:12px;
-      transition:.2s;
-    }
-    .btn:hover{filter:brightness(1.08)}
-    .btn.secondary{
-      background:#111;color:#fff;border:1px solid rgba(212,175,55,.25);font-weight:700
-    }
-    .btn:disabled{opacity:.45;cursor:not-allowed}
-    .tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-    .tag{
-      font-size:.75rem;color:#ddd;
-      background:#151515;border:1px solid rgba(255,255,255,.08);
-      padding:6px 9px;border-radius:999px
-    }
-
-    .sandbox{
-      display:flex;flex-direction:column;gap:14px;
-    }
-    .sandbox .terminal{
-      background:#020202;border:1px solid rgba(212,175,55,.24);
-      border-radius:18px;padding:14px;
-      min-height:320px;
-      display:flex;flex-direction:column;gap:10px
-    }
-    .terminal .screen{
-      flex:1;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0)),
-        #020202;
-      border:1px solid rgba(212,175,55,.12);
-      border-radius:14px;
-      padding:12px;
-      color:#d7d7d7;
-      overflow:auto;
-      font-family:Consolas,Monaco,monospace;
-      line-height:1.6;
-      white-space:pre-wrap;
-    }
-    .input-row{display:flex;gap:10px}
-    .input-row input,.input-row textarea{
-      width:100%;background:#090909;color:#fff;
-      border:1px solid rgba(212,175,55,.22);
-      border-radius:12px;padding:12px 12px;font:inherit;outline:none
-    }
-    .input-row input:focus,.input-row textarea:focus{border-color:rgba(212,175,55,.6)}
-    .input-row textarea{min-height:110px;resize:vertical}
-    .sandbox .hint{
-      color:var(--muted);font-size:.9rem;line-height:1.7
-    }
-    .log{
-      background:#0a0a0a;border:1px solid rgba(212,175,55,.14);
-      border-radius:14px;padding:12px;color:#dcdcdc;
-      max-height:180px;overflow:auto;font-size:.9rem
-    }
-    .log .ok{color:var(--good)}
-    .log .err{color:var(--bad)}
-    .footer{
-      margin:18px 0 10px;
-      color:#7d7d7d;
-      text-align:center;
-      font-size:.85rem
-    }
-    @media (max-width:1100px){
-      .layout,.hero{grid-template-columns:1fr}
-      .stats{justify-content:flex-start}
-    }
-  </style>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>WESAM-ELITE | Royal Academy</title>
+<style>
+:root{--bg:#050505;--gold:#d4af37;--text:#fff;--line:rgba(212,175,55,.2);--radius:15px}
+*{box-sizing:border-box}body{background:var(--bg);color:var(--text);font-family:sans-serif;margin:0;padding:15px}
+.top{display:flex;justify-content:space-between;border:1px solid var(--line);padding:15px;border-radius:var(--radius);margin-bottom:15px;background:#0a0a0a}
+.card{background:#0d0d0d;border:1px solid var(--line);padding:15px;border-radius:var(--radius);margin-bottom:15px}
+.btn{background:var(--gold);color:#000;border:none;padding:10px 15px;border-radius:8px;cursor:pointer;font-weight:700;margin:5px}
+.btn.sec{background:#1a1a1a;color:#fff;border:1px solid var(--line)}
+.btn:disabled{opacity:.3}.bar{height:10px;background:#1a1a1a;border-radius:5px;overflow:hidden;margin:10px 0}
+#prog{height:100%;width:0;background:var(--gold);transition:.3s}.grid{display:grid;grid-template-columns:1fr 2fr 1.5fr;gap:15px}
+.lvl{border:1px solid var(--line);padding:10px;margin-bottom:10px;border-radius:10px}.locked{opacity:.4}
+.term{background:#000;padding:10px;border-radius:10px;min-height:200px;font-family:monospace;border:1px solid var(--gold)}
+#scr{height:150px;overflow:auto;color:#0f0;font-size:12px;margin-bottom:10px;white-space:pre-wrap}
+input{width:100%;background:#111;border:1px solid var(--line);color:#fff;padding:8px;border-radius:5px}
+@media(max-width:900px){.grid{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
-  <div class="app">
-    <div class="topbar">
-      <div class="brand">
-        <div class="emblem">♛</div>
-        <div>
-          <h1>WESAM-ELITE</h1>
-          <p>Royal Academy for Languages, Programming, and Cybersecurity</p>
-        </div>
-      </div>
-      <div class="stats">
-        <div class="stat"><span class="label">XP</span><span class="value" id="xpValue">0</span></div>
-        <div class="stat"><span class="label">Streak</span><span class="value" id="streakValue">0 days</span></div>
-        <div class="stat"><span class="label">Level</span><span class="value" id="globalLevel">1</span></div>
-      </div>
-    </div>
-
-    <section class="hero">
-      <div class="card">
-        <h2>Elite Learning Command Center</h2>
-        <p class="lead">
-          Master two parallel tracks with a clean roadmap, locked progression, XP rewards, and safe browser labs.
-          Everything is stored locally so the academy keeps working even when the connection is unstable.
-        </p>
-        <div class="progress-wrap">
-          <div class="bar"><span id="overallBar"></span></div>
-          <div style="display:flex;justify-content:space-between;margin-top:8px;color:var(--muted);font-size:.9rem">
-            <span id="progressText">0% completed</span>
-            <span id="lastSaved">Ready</span>
-          </div>
-        </div>
-        <div class="hero-grid">
-          <div class="mini">
-            <div class="t">Completed Levels</div>
-            <div class="n" id="completedCount">0</div>
-          </div>
-          <div class="mini">
-            <div class="t">Current Path</div>
-            <div class="n" id="currentPathLabel">Human Languages</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="card">
-        <h3 class="section-title">Royal Principles</h3>
-        <div class="tags">
-          <span class="tag">Offline-first</span>
-          <span class="tag">LocalStorage</span>
-          <span class="tag">Sequential unlocks</span>
-          <span class="tag">Safe sandbox</span>
-          <span class="tag">Gold / Black theme</span>
-        </div>
-        <p class="lead" style="margin-top:14px">
-          Click a level to study it, then mark it complete to unlock the next stage. XP and streaks update automatically,
-          and your progress is preserved in the browser.
-        </p>
-      </div>
-    </section>
-
-    <section class="layout">
-      <aside class="card">
-        <h3 class="section-title">Dual Learning Paths</h3>
-        <button class="path-btn active" data-path="languages">
-          <span>Human Languages</span>
-          <small>English • Grammar • Vocabulary</small>
-        </button>
-        <button class="path-btn" data-path="technical">
-          <span>Technical Skills</span>
-          <small>Programming • Cybersecurity • Tools</small>
-        </button>
-        <p class="lead" style="margin-top:14px">
-          Choose a path to reveal its roadmap. Each track is independent, so users can advance in both worlds side by side.
-        </p>
-      </aside>
-
-      <main class="card">
-        <h3 class="section-title">Roadmap</h3>
-        <div id="roadmap" class="roadmap"></div>
-      </main>
-
-      <aside class="card sandbox">
-        <h3 class="section-title">Cybersecurity Sandbox</h3>
-        <div class="terminal">
-          <div class="hint">
-            Safe browser lab for practice only. Use simple commands like <b>help</b>, <b>echo</b>, <b>hash</b>, <b>scan</b>, and <b>clear</b>.
-          </div>
-          <div id="screen" class="screen">[Sandbox initialized]
-Type "help" to see commands.</div>
-          <div class="input-row">
-            <input id="cmdInput" type="text" placeholder="Enter command..." autocomplete="off" />
-            <button class="btn" id="runCmd">Run</button>
-          </div>
-          <textarea id="codeBox" placeholder="Write a safe note, mini-lab plan, or pseudo-code here..."></textarea>
-          <div class="actions">
-            <button class="btn" id="saveNote">Save Note</button>
-            <button class="btn secondary" id="loadNote">Load Note</button>
-            <button class="btn secondary" id="clearSandbox">Clear Sandbox</button>
-          </div>
-        </div>
-        <div class="log" id="log"></div>
-      </aside>
-    </section>
-
-    <div class="footer">WESAM-ELITE © 2026 | Royal Academy Edition</div>
-  </div>
-
-  <script>
-    const STORAGE_KEY = 'wesam-elite-v2';
-    const state = {
-      activePath: 'languages',
-      xp: 0,
-      streak: 0,
-      lastActiveDate: null,
-      notes: '',
-      completed: { languages: [], technical: [] }
-    };
-
-    const curriculum = {
-      languages: [
-        { id: 'lang-1', title: 'Foundation', desc: 'Alphabet, pronunciation, and daily greetings.', xp: 50, tags: ['Basics', 'Speaking'] },
-        { id: 'lang-2', title: 'Core Grammar', desc: 'Sentence structure, verbs, and tense control.', xp: 75, tags: ['Grammar', 'Writing'] },
-        { id: 'lang-3', title: 'Vocabulary Growth', desc: 'Theme-based vocabulary and practical phrases.', xp: 90, tags: ['Vocabulary', 'Comprehension'] },
-        { id: 'lang-4', title: 'Conversation Mastery', desc: 'Dialogue practice and real-world communication.', xp: 120, tags: ['Listening', 'Speaking'] }
-      ],
-      technical: [
-        { id: 'tech-1', title: 'Programming Foundations', desc: 'Variables, logic, loops, and problem solving.', xp: 60, tags: ['Code', 'Logic'] },
-        { id: 'tech-2', title: 'Web Development', desc: 'HTML, CSS, and responsive interfaces.', xp: 80, tags: ['Frontend', 'UI'] },
-        { id: 'tech-3', title: 'Cybersecurity Basics', desc: 'Threat awareness, hygiene, and safe testing.', xp: 100, tags: ['Security', 'Defense'] },
-        { id: 'tech-4', title: 'Practical Labs', desc: 'Controlled exercises in a browser sandbox.', xp: 140, tags: ['Labs', 'Sandbox'] }
-      ]
-    };
-
-    const el = id => document.getElementById(id);
-    const roadmap = el('roadmap');
-    const log = el('log');
-    const screen = el('screen');
-
-    function todayKey(){
-      return new Date().toISOString().slice(0,10);
-    }
-
-    function saveState(){
-      try{
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-        el('lastSaved').textContent = 'Saved locally';
-      }catch(e){
-        el('lastSaved').textContent = 'Save unavailable';
-      }
-    }
-
-    function loadState(){
-      try{
-        const raw = localStorage.getItem(STORAGE_KEY);
-        if(raw){
-          const parsed = JSON.parse(raw);
-          Object.assign(state, parsed);
-          state.completed = parsed.completed || { languages: [], technical: [] };
-        }
-      }catch(e){}
-    }
-
-    function updateStreak(){
-      const today = todayKey();
-      if(state.lastActiveDate !== today){
-        const prev = state.lastActiveDate ? new Date(state.lastActiveDate) : null;
-        const now = new Date(today);
-        if(!prev){
-          state.streak = 1;
-        }else{
-          const diffDays = Math.round((now - prev) / 86400000);
-          state.streak = diffDays === 1 ? state.streak + 1 : 1;
-        }
-        state.lastActiveDate = today;
-      }
-    }
-
-    function getCompletedTotal(){
-      return state.completed.languages.length + state.completed.technical.length;
-    }
-
-    function getTotalLevels(){
-      return curriculum.languages.length + curriculum.technical.length;
-    }
-
-    function currentLevelNumber(){
-      return 1 + Math.floor(state.xp / 100);
-    }
-
-    function renderStats(){
-      el('xpValue').textContent = state.xp;
-      el('streakValue').textContent = state.streak + ' days';
-      el('globalLevel').textContent = currentLevelNumber();
-      const pct = Math.round((getCompletedTotal() / getTotalLevels()) * 100);
-      el('overallBar').style.width = pct + '%';
-      el('progressText').textContent = pct + '% completed';
-      el('completedCount').textContent = getCompletedTotal();
-      el('currentPathLabel').textContent = state.activePath === 'languages' ? 'Human Languages' : 'Technical Skills';
-    }
-
-    function logMessage(message, kind='ok'){
-      const div = document.createElement('div');
-      div.className = kind;
-      div.textContent = message;
-      log.prepend(div);
-    }
-
-    function renderRoadmap(){
-      roadmap.innerHTML = '';
-      const lessons = curriculum[state.activePath];
-      const completed = state.completed[state.activePath];
-
-      lessons.forEach((item, index) => {
-        const unlocked = index === 0 || completed.includes(lessons[index - 1].id);
-        const done = completed.includes(item.id);
-
-        const node = document.createElement('div');
-        node.className = 'level' + (done ? ' completed' : '') + (!unlocked && !done ? ' locked' : '');
-        node.innerHTML = `
-          <div class="level-top">
-            <div>
-              <h4>Level ${index + 1}: ${item.title}</h4>
-              <p>${item.desc}</p>
-            </div>
-            <span class="badge">${done ? 'Completed' : unlocked ? 'Unlocked' : 'Locked'}</span>
-          </div>
-          <div class="tags">${item.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
-          <div class="actions">
-            <button class="btn" ${(!unlocked || done) ? 'disabled' : ''} data-complete="${item.id}">${done ? 'Done' : 'Mark Complete'}</button>
-            <button class="btn secondary" data-study="${item.id}">Open Lesson</button>
-          </div>
-        `;
-        roadmap.appendChild(node);
-      });
-    }
-
-    function completeLevel(id){
-      const lessons = curriculum[state.activePath];
-      const completed = state.completed[state.activePath];
-      const idx = lessons.findIndex(x => x.id === id);
-      if(idx === -1) return;
-      if(idx > 0 && !completed.includes(lessons[idx - 1].id)) return;
-      if(completed.includes(id)) return;
-
-      completed.push(id);
-      state.xp += lessons[idx].xp;
-      updateStreak();
-      saveState();
-      renderAll();
-      logMessage(`Unlocked ${lessons[idx].title} +${lessons[idx].xp} XP`);
-    }
-
-    function openLesson(id){
-      const lesson = curriculum[state.activePath].find(x => x.id === id);
-      if(!lesson) return;
-      screen.textContent =
-`[ ${lesson.title} ]
-${lesson.desc}
-
-Guided practice:
-1) Read the objective.
-2) Complete the practice task.
-3) Mark the level complete to unlock the next stage.
-
-Reward: ${lesson.xp} XP`;
-      logMessage(`Opened ${lesson.title}`);
-    }
-
-    function setPath(path){
-      state.activePath = path;
-      document.querySelectorAll('.path-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.path === path);
-      });
-      renderAll();
-      saveState();
-    }
-
-    function safeHash(text){
-      let h = 0;
-      for(let i = 0; i < text.length; i++) h = ((h << 5) - h) + text.charCodeAt(i), h |= 0;
-      return Math.abs(h).toString(16);
-    }
-
-    function runSandboxCommand(){
-      const input = el('cmdInput');
-      const raw = input.value.trim();
-      if(!raw) return;
-      const [cmd, ...rest] = raw.split(' ');
-      const arg = rest.join(' ');
-      let output = '';
-
-      switch(cmd.toLowerCase()){
-        case 'help':
-          output = 'Commands: help, echo <text>, hash <text>, scan, clear';
-          break;
-        case 'echo':
-          output = arg || '';
-          break;
-        case 'hash':
-          output = 'sha-lite:' + safeHash(arg || '');
-          break;
-        case 'scan':
-          output = 'Scan complete: no unsafe activity detected. Sandbox remains isolated.';
-          break;
-        case 'clear':
-          screen.textContent = '[Sandbox cleared]';
-          input.value = '';
-          return;
-        default:
-          output = 'Unknown command. Type "help".';
-      }
-
-      screen.textContent += '\n> ' + raw + '\n' + output;
-      screen.scrollTop = screen.scrollHeight;
-      input.value = '';
-      logMessage('Sandbox command executed: ' + cmd);
-    }
-
-    function saveNote(){
-      state.notes = el('codeBox').value;
-      saveState();
-      logMessage('Sandbox note saved');
-    }
-
-    function loadNote(){
-      el('codeBox').value = state.notes || '';
-      logMessage('Sandbox note loaded');
-    }
-
-    function clearSandbox(){
-      el('codeBox').value = '';
-      screen.textContent = '[Sandbox cleared]';
-      logMessage('Sandbox cleared');
-    }
-
-    function renderAll(){
-      renderStats();
-      renderRoadmap();
-    }
-
-    loadState();
-    updateStreak();
-    renderAll();
-    saveState();
-
-    document.querySelectorAll('.path-btn').forEach(btn => {
-      btn.addEventListener('click', () => setPath(btn.dataset.path));
-    });
-
-    roadmap.addEventListener('click', e => {
-      const completeBtn = e.target.close
+<div class="top">
+<div><b>♛ WESAM-ELITE</b><p style="font-size:10px;color:gray">Royal Academy Edition</p></div>
+<div>XP: <span id="xp">0</span> | Streak: <span id="stk">0</span> | Lvl: <span id="glvl">1</span></div>
+</div>
+<div class="card">
+<div class="bar"><div id="prog"></div></div>
+<button class="btn sec" onclick="setPath('languages')">Human Languages</button>
+<button class="btn sec" onclick="setPath('technical')">Technical Skills</button>
+</div>
+<div class="grid">
+<div class="card"><h3>Paths</h3><p id="cpath">Languages</p></div>
+<div class="card" id="roadmap"></div>
+<div class="card">
+<h3>Sandbox</h3>
+<div class="term"><div id="scr">[System Ready]</div><input id="cin" placeholder="Type help..." onkeydown="if(event.key==='Enter')runCmd()"></div>
+</div>
+</div>
+<script>
+const S='wesam_v2',cur={languages:[{id:'l1',t:'Foundation',x:50},{id:'l2',t:'Grammar',x:70},{id:'l3',t:'Speaking',x:100}],technical:[{id:'t1',t:'Programming',x:60},{id:'t2',t:'Cyber Basics',x:90},{id:'t3',t:'Sandbox Labs',x:120}]};
+let st={p:'languages',x:0,s:0,d:null,c:{languages:[],technical:[]}};
+function save(){localStorage.setItem(S,JSON.stringify(st))}
+function load(){const r=localStorage.getItem(S);if(r)st=JSON.parse(r)}
+function render(){
+document.getElementById('xp').innerText=st.x;document.getElementById('stk').innerText=st.s;document.getElementById('glvl').innerText=1+Math.floor(st.x/100);
+document.getElementById('cpath').innerText=st.p==='languages'?'Languages':'Technical';
+const r=document.getElementById('roadmap');r.innerHTML='';
+cur[st.p].forEach((l,i)=>{
+const unk=i===0||st.c[st.p].includes(cur[st.p][i-1].id),don=st.c[st.p].includes(l.id);
+r.innerHTML+=`<div class="lvl ${!unk&&!don?'locked':''}"><b>${l.t}</b><br><button class="btn" onclick="done('${l.id}')" ${!unk||don?'disabled':''}>${don?'✓':'Complete'}</button></div>`;
+});
+const pct=(st.c.languages.length+st.c.technical.length)/6*100;document.getElementById('prog').style.width=pct+'%';
+}
+function setPath(p){st.p=p;render();save()}
+function done(id){const l=cur[st.p].find(x=>x.id===id);st.c[st.p].push(id);st.x+=l.x;render();save()}
+function runCmd(){
+const i=document.getElementById('cin'),v=i.value.trim().toLowerCase(),s=document.getElementById('scr');
+let o='';if(v==='help')o='Commands: scan, help, clear';else if(v==='scan')o='[OK] No threats.';else if(v==='clear'){s.innerText='';i.value='';return;}else o='Unknown command.';
+s.innerText+='\n> '+v+'\n'+o;s.scrollTop=s.scrollHeight;i.value='';
+}
+load();render();
+</script>
+</body>
+  </html>
