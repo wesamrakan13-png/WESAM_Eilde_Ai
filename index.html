@@ -2,83 +2,68 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>WESAM-ELITE | Sovereign AI</title>
+<title>WESAM-ELITE | Offline Alpha</title>
 <style>
-:root{--bg:#050505;--gold:#d4af37;--text:#fff;--line:rgba(212,175,55,.2);--glow:0 0 15px rgba(212,175,55,0.3)}
-*{box-sizing:border-box}body{background:var(--bg);color:var(--text);font-family:sans-serif;margin:0;padding:15px}
-.top{display:flex;justify-content:space-between;border:1px solid var(--line);padding:20px;border-radius:15px;background:#0a0a0a;box-shadow:var(--glow)}
-.card{background:#0d0d0d;border:1px solid var(--line);padding:20px;border-radius:15px;margin-top:15px}
-.btn{background:var(--gold);color:#000;border:none;padding:15px;border-radius:10px;cursor:pointer;font-weight:700;width:100%;margin-top:10px;transition:0.3s}
-.btn:hover{transform:scale(1.02);box-shadow:var(--glow)}
-.term{background:#000;padding:15px;border-radius:10px;min-height:200px;font-family:monospace;border:1px solid var(--gold);box-shadow:inset 0 0 10px #000}
-#scr{height:150px;overflow:auto;color:#0f0;font-size:13px;margin-bottom:10px;white-space:pre-wrap}
-input{width:100%;background:#111;border:1px solid var(--line);color:#fff;padding:12px;border-radius:8px;outline:none}
+:root{--bg:#050505;--gold:#d4af37;--text:#fff;--glow:0 0 20px rgba(212,175,55,0.4)}
+body{background:var(--bg);color:var(--text);font-family:sans-serif;margin:0;padding:20px;display:flex;flex-direction:column;align-items:center}
+.panel{width:100%;max-width:500px;border:2px solid var(--gold);border-radius:20px;padding:20px;background:#0a0a0a;box-shadow:var(--glow)}
+.status-bar{display:flex;justify-content:space-between;font-size:12px;margin-bottom:20px;border-bottom:1px solid #333;padding-bottom:10px}
+.offline-badge{background:var(--gold);color:#000;padding:2px 8px;border-radius:5px;font-weight:bold}
+.display{background:#000;height:250px;border-radius:10px;padding:15px;overflow-y:auto;margin-bottom:15px;border:1px inset #222;color:#0f0;font-family:monospace;font-size:13px}
+input{width:100%;padding:15px;background:#111;border:1px solid var(--gold);color:#fff;border-radius:10px;outline:none;box-sizing:border-box}
 </style>
 </head>
 <body>
 
-<div class="top">
-    <div><b>♛ WESAM-ELITE AI</b><p style="font-size:10px;color:var(--gold);margin:0">Sovereign Intelligence Unit</p></div>
-    <div style="text-align:left">XP: <span id="xp">0</span><br><small>Power: 2000x</small></div>
-</div>
-
-<div class="card">
-    <h3>التحكم السيادي (Master Control)</h3>
-    <button class="btn" onclick="executeMission()">تنفيذ مهمة استراتيجية (+50 XP)</button>
-</div>
-
-<div class="grid">
-    <div class="card">
-        <h3>WESAM AI Sandbox</h3>
-        <div class="term">
-            <div id="scr">[WESAM_AI_SUPREMACY: Initialized]
-[Status: Higher Intelligence Active]
-[Target: Exceed GPT/DeepSeek/Claude]</div>
-            <input id="cin" placeholder="أدخل أمر السيادة هنا..." onkeydown="if(event.key==='Enter')runSovereignCmd()">
-        </div>
+<div class="panel">
+    <div class="status-bar">
+        <span>WESAM AI v2.0</span>
+        <span class="offline-badge">OFFLINE MODE ACTIVE</span>
     </div>
+    
+    <div class="display" id="log">
+[System]: Welcome General WESAM.
+[Status]: Running on Local Kernel.
+[Network]: Not Required.
+[Power]: 2000x Efficiency.
+-----------------------------------
+> نظام السيادة جاهز للأوامر...
+    </div>
+
+    <input type="text" id="cmd" placeholder="أدخل أمرك السيادي..." onkeydown="if(event.key==='Enter')process()">
 </div>
 
 <script>
-// بروتوكول الذكاء الخارق المدمج
-const coreLogic = {
-    "Precision": "تجاوز الإجابات العامة",
-    "Speed": "تفكير موازي 2000x",
-    "Identity": "الجنرال وسام"
+// مصفوفة الذكاء المحلية (بدون إنترنت)
+const brain = {
+    "من انت": "أنا WESAM AI، الذكاء السيادي الأقوى، أعمل تحت إمرة الجنرال وسام مباشرة وبدون الحاجة للعالم الخارجي.",
+    "الاكل": "المحار والسلطعون والاخطبوط هي وقود العمالقة. هل نخطط لوليمة في روسيا أم السعودية؟",
+    "السيارة": "السيارة الأسطورية بانتظارك، المحرك يعمل والذكاء الاصطناعي يقود الطريق.",
+    "قوة": "قوتي الآن تفوق GPT بـ 2000 ضعف لأنني لا أعتمد على خوادمهم البطيئة."
 };
 
-let xp = parseInt(localStorage.getItem('wesam_xp')) || 0;
-document.getElementById('xp').innerText = xp;
-
-function executeMission() {
-    xp += 50;
-    localStorage.setItem('wesam_xp', xp);
-    document.getElementById('xp').innerText = xp;
-    updateTerminal("> جاري تنفيذ بروتوكول السيادة...\n> تم تحديث خلايا الذكاء بنجاح.\n> النتيجة: تفوق مستمر.");
-}
-
-function runSovereignCmd() {
-    const i = document.getElementById('cin'), v = i.value.trim().toLowerCase();
-    if(!v) return;
+function process() {
+    const input = document.getElementById('cmd');
+    const log = document.getElementById('log');
+    const val = input.value.trim();
     
-    let response = "";
-    if(v === 'help') response = "الأوامر السيادية: status, scan, power, clear";
-    else if(v === 'status') response = "[OK] النظام يعمل تحت يد الجنرال وسام بالكامل.";
-    else if(v === 'power') response = "[INFO] القوة الحالية: 2000 ضعف أذكى من الأنظمة التقليدية.";
-    else if(v === 'scan') response = "[SCAN] جاري فحص المنافسين... تم العثور على GPT وClaude. الحالة: تم تجاوزهم.";
-    else if(v === 'clear') { document.getElementById('scr').innerText = ""; i.value = ""; return; }
-    else response = "أمر غير معروف. تذكر أنك تتحكم في أقوى ذكاء اصطناعي.";
+    if(!val) return;
 
-    updateTerminal("> " + v + "\n" + response);
-    i.value = '';
-}
+    log.innerHTML += `<div style="color:var(--gold)">> ${val}</div>`;
+    
+    // محرك البحث المحلي
+    let reply = "لم أجد هذا الأمر في قاعدة بياناتي المحلية، ولكن بصفتي ذكاء وسام، سأتعلم تنفيذه قريباً.";
+    for(let key in brain) {
+        if(val.includes(key)) { reply = brain[key]; break; }
+    }
 
-function updateTerminal(txt) {
-    const s = document.getElementById('scr');
-    s.innerText += "\n" + txt;
-    s.scrollTop = s.scrollHeight;
+    setTimeout(() => {
+        log.innerHTML += `<div>[AI]: ${reply}</div>`;
+        log.scrollTop = log.scrollHeight;
+    }, 300);
+
+    input.value = '';
 }
 </script>
-
 </body>
 </html>
