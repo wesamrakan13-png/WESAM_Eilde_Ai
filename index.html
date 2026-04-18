@@ -2,64 +2,23 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>WESAM-ELITE | Royal Academy</title>
+<title>WESAM-ELITE</title>
 <style>
-:root{--bg:#050505;--gold:#d4af37;--text:#fff;--line:rgba(212,175,55,.2);--radius:15px}
+:root{--bg:#050505;--gold:#d4af37;--text:#fff;--line:rgba(212,175,55,.2)}
 *{box-sizing:border-box}body{background:var(--bg);color:var(--text);font-family:sans-serif;margin:0;padding:10px}
-.top{display:flex;justify-content:space-between;border:1px solid var(--line);padding:15px;border-radius:var(--radius);margin-bottom:15px;background:#0a0a0a;align-items:center}
-.card{background:#0d0d0d;border:1px solid var(--line);padding:15px;border-radius:var(--radius);margin-bottom:15px}
-.btn{background:var(--gold);color:#000;border:none;padding:12px;border-radius:8px;cursor:pointer;font-weight:700;margin:5px;flex:1}
-.btn.sec{background:#1a1a1a;color:#fff;border:1px solid var(--line)}
-.btn:disabled{opacity:.3}.bar{height:10px;background:#1a1a1a;border-radius:5px;overflow:hidden;margin:10px 0}
-#prog{height:100%;width:0;background:var(--gold);transition:.3s}.grid{display:grid;grid-template-columns:1fr 2fr 1.5fr;gap:15px}
-.lvl{border:1px solid var(--line);padding:10px;margin-bottom:10px;border-radius:10px}.locked{opacity:.4}
-.term{background:#000;padding:10px;border-radius:10px;min-height:180px;font-family:monospace;border:1px solid var(--gold)}
-#scr{height:120px;overflow:auto;color:#0f0;font-size:12px;margin-bottom:10px;white-space:pre-wrap}
-input{width:100%;background:#111;border:1px solid var(--line);color:#fff;padding:10px;border-radius:5px;outline:none}
-@media(max-width:900px){.grid{grid-template-columns:1fr}.top{flex-direction:column;text-align:center;gap:10px}}
+.top{display:flex;justify-content:space-between;border:1px solid var(--line);padding:15px;border-radius:15px;background:#0a0a0a}
+.btn{background:var(--gold);color:#000;border:none;padding:12px;border-radius:8px;cursor:pointer;font-weight:700;width:100%;margin-top:10px}
+.term{background:#000;padding:10px;border-radius:10px;border:1px solid var(--gold);margin-top:15px}
+#scr{height:100px;overflow:auto;color:#0f0;font-size:12px;white-space:pre-wrap}
 </style>
 </head>
 <body>
-<div class="top">
-<div><b>♛ WESAM-ELITE</b><p style="font-size:10px;color:gray;margin:0">نظام السيادة الرقمي</p></div>
-<div style="font-size:14px">XP: <span id="xp">0</span> | Lvl: <span id="glvl">1</span></div>
-</div>
-<div class="card">
-<div class="bar"><div id="prog"></div></div>
-<div style="display:flex"><button class="btn sec" onclick="setPath('languages')">اللغات</button><button class="btn sec" onclick="setPath('technical')">التقنية</button></div>
-</div>
-<div class="grid">
-<div class="card" style="text-align:center"><h3>المسار</h3><b id="cpath" style="color:var(--gold)">Languages</b></div>
-<div class="card" id="roadmap"></div>
-<div class="card">
-<h3>Sandbox</h3>
-<div class="term"><div id="scr">[System Ready]</div><input id="cin" placeholder="Type help..." onkeydown="if(event.key==='Enter')runCmd()"></div>
-<button class="btn sec" style="width:100%;margin-top:10px" onclick="runCmd()">تنفيذ الأمر</button>
-</div>
-</div>
+<div class="top"><b>♛ WESAM-ELITE</b><div>XP: <span id="xp">0</span></div></div>
+<button class="btn" onclick="done()">إكمال المهمة (اختبار الـ XP)</button>
+<div class="term"><div id="scr">[System Ready]</div></div>
 <script>
-const S='wesam_v2',cur={languages:[{id:'l1',t:'الأساسيات',x:50},{id:'l2',t:'القواعد',x:70},{id:'l3',t:'المحادثة',x:100}],technical:[{id:'t1',t:'البرمجة',x:60},{id:'t2',t:'الأمن السيبراني',x:90},{id:'t3',t:'المختبرات',x:120}]};
-let st={p:'languages',x:0,c:{languages:[],technical:[]}};
-function save(){localStorage.setItem(S,JSON.stringify(st))}
-function load(){const r=localStorage.getItem(S);if(r)st=JSON.parse(r)}
-function render(){
-document.getElementById('xp').innerText=st.x;document.getElementById('glvl').innerText=1+Math.floor(st.x/100);
-document.getElementById('cpath').innerText=st.p==='languages'?'Human Languages':'Technical Skills';
-const r=document.getElementById('roadmap');r.innerHTML='';
-cur[st.p].forEach((l,i)=>{
-const unk=i===0||st.c[st.p].includes(cur[st.p][i-1].id),don=st.c[st.p].includes(l.id);
-r.innerHTML+=`<div class="lvl ${!unk&&!don?'locked':''}"><b>${l.t}</b><br><button class="btn" onclick="done('${l.id}')" ${!unk||don?'disabled':''}>${don?'تم بنجاح ✓':'إكمال المرحلة'}</button></div>`;
-});
-const pct=(st.c.languages.length+st.c.technical.length)/6*100;document.getElementById('prog').style.width=pct+'%';
-}
-function setPath(p){st.p=p;render();save()}
-function done(id){const l=cur[st.p].find(x=>x.id===id);st.c[st.p].push(id);st.x+=l.x;render();save()}
-function runCmd(){
-const i=document.getElementById('cin'),v=i.value.trim().toLowerCase(),s=document.getElementById('scr');
-let o='';if(v==='help')o='الأوامر: scan, help, clear';else if(v==='scan')o='[OK] لا يوجد تهديدات.';else if(v==='clear'){s.innerText='';i.value='';return;}else o='أمر غير معروف.';
-s.innerText+='\n> '+v+'\n'+o;s.scrollTop=s.scrollHeight;i.value='';
-}
-load();render();
+let x=localStorage.getItem('xp')||0;document.getElementById('xp').innerText=x;
+function done(){x=parseInt(x)+10;localStorage.setItem('xp',x);document.getElementById('xp').innerText=x;alert('عاش يا بطل! زاد الـ XP')}
 </script>
 </body>
 </html>
