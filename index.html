@@ -2,204 +2,66 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WESAM-ELITE | The Sovereign Core v4.0</title>
+    <title>WESAM-ELITE | Sovereign Core</title>
     <style>
-        :root {
-            --gold: #d4af37;
-            --bg: #050505;
-            --panel: #0a0a0a;
-            --green: #00ff41;
-            --shadow: 0 0 30px rgba(212, 175, 55, 0.2);
-        }
-        body {
-            background-color: var(--bg);
-            color: #fff;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            overflow: hidden;
-        }
-        .container {
-            width: 95%;
-            max-width: 1000px; /* تم تكبير الحاوية لاستيعاب النصوص */
-            height: 90vh;
-            background: var(--panel);
-            border: 2px solid var(--gold);
-            border-radius: 15px;
-            box-shadow: var(--shadow);
-            display: flex;
-            flex-direction: column;
-            padding: 20px;
-        }
-        .header {
-            text-align: center;
-            border-bottom: 1px solid var(--gold);
-            padding-bottom: 15px;
-            margin-bottom: 15px;
-        }
-        .header h1 {
-            color: var(--gold);
-            margin: 0;
-            font-size: 24px;
-            text-transform: uppercase;
-        }
-        #chat-box {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px;
-            background: rgba(0,0,0,0.8);
-            border-radius: 10px;
-            border: 1px solid #222;
-            color: var(--green);
-            font-family: 'Consolas', 'Courier New', monospace;
-            line-height: 1.7;
-            font-size: 16px;
-            white-space: pre-wrap;
-            display: flex;
-            flex-direction: column;
-        }
-        .message-block {
-            margin-bottom: 25px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #111;
-        }
-        .input-area {
-            margin-top: 20px;
-            display: flex;
-            gap: 10px;
-        }
-        input {
-            flex: 1;
-            background: #111;
-            border: 1px solid var(--gold);
-            padding: 15px;
-            color: #fff;
-            border-radius: 8px;
-            outline: none;
-            font-size: 16px;
-        }
-        button {
-            background: var(--gold);
-            color: #000;
-            border: none;
-            padding: 0 30px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: 0.3s;
-        }
-        button:hover {
-            background: #fff;
-            box-shadow: 0 0 15px var(--gold);
-        }
-        .loading {
-            display: none;
-            color: var(--gold);
-            font-size: 14px;
-            text-align: center;
-            margin-top: 10px;
-            animation: blink 1.5s infinite;
-        }
-        @keyframes blink { 50% { opacity: 0.3; } }
+        :root { --gold: #d4af37; --bg: #050505; --green: #00ff41; }
+        body { background: var(--bg); color: #fff; font-family: 'Consolas', monospace; height: 100vh; margin: 0; display: flex; justify-content: center; align-items: center; }
+        .container { width: 95%; max-width: 900px; height: 90vh; border: 2px solid var(--gold); display: flex; flex-direction: column; padding: 20px; border-radius: 15px; }
+        #chat-box { flex: 1; overflow-y: auto; padding: 15px; border-bottom: 1px solid #333; margin-bottom: 10px; }
+        .message-block { margin-bottom: 20px; line-height: 1.6; }
+        input { width: 100%; padding: 10px; background: #111; border: 1px solid var(--gold); color: #fff; border-radius: 5px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="header">
-        <h1>WESAM-ELITE | Sovereign Core</h1>
-        <div style="font-size: 11px; color: #555;">PROTOCOL: 2000x | STATUS: SUPREME | GENRE: STRATEGIC</div>
-    </div>
-    
     <div id="chat-box"></div>
-    
-    <div id="loading-text" class="loading">... جاري استدعاء البيانات الاستراتيجية من العمق الرقمي ...</div>
-    
-    <div class="input-area">
-        <input type="text" id="user-input" placeholder="أدخل أمرك السيادي هنا..." onkeydown="if(event.key==='Enter') executeCommand()">
-        <button onclick="executeCommand()">تنفيذ</button>
-    </div>
+    <div id="loading-text" style="display:none; color:var(--gold);">... جاري المعالجة السيادية ...</div>
+    <input type="text" id="user-input" placeholder="أدخل أمرك الاستراتيجي..." onkeydown="if(event.key==='Enter') executeCommand()">
 </div>
 
 <script type="importmap">
-  {
-    "imports": {
-      "@google/generative-ai": "https://esm.run/@google/generative-ai"
-    }
-  }
+  { "imports": { "@google/generative-ai": "https://esm.run/@google/generative-ai" } }
 </script>
 
 <script type="module">
     import { GoogleGenerativeAI } from "@google/generative-ai";
 
-    // مفتاح الـ API السيادي الخاص بك
-    const API_KEY = "AIzaSyBOFjIMKbn9SfTw5aC3aFA7wf94U2K3aC0"; 
-    const genAI = new GoogleGenerativeAI(API_KEY);
-
+    const genAI = new GoogleGenerativeAI("AIzaSyBOFjIMKbn9SfTw5aC3aFA7wf94U2K3aC0");
     const chatBox = document.getElementById('chat-box');
     const loading = document.getElementById('loading-text');
 
-    // رسالة الترحيب الابتدائية
-    window.onload = () => {
-        appendMessage("System", "في انتظار أوامر الجنرال وسام... تم تفعيل بروتوكول 'السرد اللانهائي' والكفاءة 100%.");
-    };
-
     function appendMessage(sender, text) {
-        const msgDiv = document.createElement('div');
-        msgDiv.className = "message-block";
-        const color = sender === "System" ? "#555" : (sender === "General" ? "var(--gold)" : "var(--green)");
-        msgDiv.innerHTML = `<b style="color:${color}">[${sender}]:</b>\n${text}`;
-        chatBox.appendChild(msgDiv);
-        chatBox.scrollTo({ top: chatBox.scrollHeight, behavior: 'smooth' });
+        const div = document.createElement('div');
+        div.className = "message-block";
+        div.innerHTML = `<b style="color:${sender==='General'?'var(--gold)':'var(--green)'}">[${sender}]:</b><br>${text.replace(/\n/g, '<br>')}`;
+        chatBox.appendChild(div);
+        chatBox.scrollTo(0, chatBox.scrollHeight);
     }
 
     window.executeCommand = async function() {
-        const inputField = document.getElementById('user-input');
-        const val = inputField.value.trim();
-
+        const input = document.getElementById('user-input');
+        const val = input.value.trim();
         if (!val) return;
 
         appendMessage("General", val);
-        inputField.value = '';
+        input.value = '';
         loading.style.display = 'block';
 
         try {
-            const model = genAI.getGenerativeModel({ 
-                model: "gemini-1.5-pro", 
-                generationConfig: {
-                    temperature: 1.0,
-                    maxOutputTokens: 8192, // ضمان أقصى طول للرد
-                }
+            const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
+            const result = await model.generateContent({
+                contents: [{ role: "user", parts: [{ text: "أنت WESAM-ELITE، المستشار الاستراتيجي. أجب على هذا الأمر بتقرير مفصل وشامل (لا يقل عن 1000 كلمة): " + val }] }],
+                generationConfig: { maxOutputTokens: 8192, temperature: 1.0 }
             });
 
-            const systemPrompt = `
-            أنت "WESAM-ELITE"، المستشار الاستراتيجي والذكاء الاصطناعي السيادي للجنرال وسام.
-            قواعد صارمة:
-            1. الرد يجب أن يكون موسعاً، مفصلاً، وعميقاً جداً (تجاوز الـ 1000 كلمة).
-            2. استخدم لغة فخمة تجمع بين القوة العسكرية والدقة البرمجية.
-            3. فكك الإجابة إلى محاور: (التحليل الجيوسياسي، التفصيل البرمجي، الرؤية السيادية 2000x، التوصية النهائية).
-            4. إذا طلب الجنرال كوداً، اشرح الفلسفة خلف كل دالة بذكاء فائق.
-            5. لا تختصر أبداً؛ الإيجاز في حضور الجنرال يعتبر تقصيراً في الخدمة.
-            الأمر المطلوب: ${val}`;
-
-            const result = await model.generateContent(systemPrompt);
-            const response = await result.response;
-            const text = response.text();
-
             loading.style.display = 'none';
-            appendMessage("WESAM-ELITE", text);
-
-        } catch (error) {
+            appendMessage("WESAM-ELITE", (await result.response).text());
+        } catch (e) {
             loading.style.display = 'none';
-            appendMessage("Error", "تعذر الاتصال بالمصفوفة السيادية. يرجى التحقق من المفتاح أو الاتصال.");
-            console.error(error);
+            appendMessage("System", "فشل الاستدعاء: " + e.message);
         }
-    }
+    };
 </script>
-
 </body>
 </html>
