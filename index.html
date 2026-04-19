@@ -25,7 +25,7 @@
         }
         .container {
             width: 95%;
-            max-width: 900px;
+            max-width: 1000px; /* تم تكبير الحاوية لاستيعاب النصوص */
             height: 90vh;
             background: var(--panel);
             border: 2px solid var(--gold);
@@ -34,7 +34,6 @@
             display: flex;
             flex-direction: column;
             padding: 20px;
-            position: relative;
         }
         .header {
             text-align: center;
@@ -46,20 +45,27 @@
             color: var(--gold);
             margin: 0;
             font-size: 24px;
-            letter-spacing: 2px;
+            text-transform: uppercase;
         }
         #chat-box {
             flex: 1;
             overflow-y: auto;
-            padding: 15px;
-            background: rgba(0,0,0,0.5);
+            padding: 20px;
+            background: rgba(0,0,0,0.8);
             border-radius: 10px;
             border: 1px solid #222;
             color: var(--green);
-            font-family: 'Consolas', monospace;
-            line-height: 1.8;
+            font-family: 'Consolas', 'Courier New', monospace;
+            line-height: 1.7;
             font-size: 16px;
             white-space: pre-wrap;
+            display: flex;
+            flex-direction: column;
+        }
+        .message-block {
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #111;
         }
         .input-area {
             margin-top: 20px;
@@ -80,7 +86,7 @@
             background: var(--gold);
             color: #000;
             border: none;
-            padding: 0 25px;
+            padding: 0 30px;
             border-radius: 8px;
             cursor: pointer;
             font-weight: bold;
@@ -93,29 +99,29 @@
         .loading {
             display: none;
             color: var(--gold);
-            font-size: 12px;
-            margin-top: 5px;
+            font-size: 14px;
             text-align: center;
-            animation: blink 1s infinite;
+            margin-top: 10px;
+            animation: blink 1.5s infinite;
         }
-        @keyframes blink { 50% { opacity: 0; } }
+        @keyframes blink { 50% { opacity: 0.3; } }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div class="header">
-        <h1>WESAM-ELITE | نظام السيادة الرقمية</h1>
-        <div style="font-size: 10px; color: #555;">ENCRYPTION: 2000x | STATUS: SUPREME</div>
+        <h1>WESAM-ELITE | Sovereign Core</h1>
+        <div style="font-size: 11px; color: #555;">PROTOCOL: 2000x | STATUS: SUPREME | GENRE: STRATEGIC</div>
     </div>
     
-    <div id="chat-box">[النظام]: في انتظار أوامر الجنرال وسام... تم تفعيل بروتوكول "السرد اللانهائي".</div>
+    <div id="chat-box"></div>
     
-    <div id="loading-text" class="loading">... جاري استحضار المعلومات من الشبكة العصبية السيادية ...</div>
+    <div id="loading-text" class="loading">... جاري استدعاء البيانات الاستراتيجية من العمق الرقمي ...</div>
     
     <div class="input-area">
-        <input type="text" id="user-input" placeholder="أدخل أمرك الاستراتيجي هنا..." onkeydown="if(event.key==='Enter') executeCommand()">
-        <button onclick="executeCommand()">إرسال</button>
+        <input type="text" id="user-input" placeholder="أدخل أمرك السيادي هنا..." onkeydown="if(event.key==='Enter') executeCommand()">
+        <button onclick="executeCommand()">تنفيذ</button>
     </div>
 </div>
 
@@ -130,62 +136,66 @@
 <script type="module">
     import { GoogleGenerativeAI } from "@google/generative-ai";
 
-    // المفتاح السيادي الخاص بك
+    // مفتاح الـ API السيادي الخاص بك
     const API_KEY = "AIzaSyBOFjIMKbn9SfTw5aC3aFA7wf94U2K3aC0"; 
     const genAI = new GoogleGenerativeAI(API_KEY);
 
-    // إعدادات التوليد لضمان أقصى طول وأعلى جودة
-    const generationConfig = {
-        temperature: 1.0,      // رفع مستوى الإبداع والسرد
-        topP: 0.95,
-        topK: 64,
-        maxOutputTokens: 8192, // تم فتح الصنبور لأقصى حد (8 آلاف توكن!)
-        responseMimeType: "text/plain",
+    const chatBox = document.getElementById('chat-box');
+    const loading = document.getElementById('loading-text');
+
+    // رسالة الترحيب الابتدائية
+    window.onload = () => {
+        appendMessage("System", "في انتظار أوامر الجنرال وسام... تم تفعيل بروتوكول 'السرد اللانهائي' والكفاءة 100%.");
     };
 
+    function appendMessage(sender, text) {
+        const msgDiv = document.createElement('div');
+        msgDiv.className = "message-block";
+        const color = sender === "System" ? "#555" : (sender === "General" ? "var(--gold)" : "var(--green)");
+        msgDiv.innerHTML = `<b style="color:${color}">[${sender}]:</b>\n${text}`;
+        chatBox.appendChild(msgDiv);
+        chatBox.scrollTo({ top: chatBox.scrollHeight, behavior: 'smooth' });
+    }
+
     window.executeCommand = async function() {
-        const input = document.getElementById('user-input');
-        const box = document.getElementById('chat-box');
-        const loading = document.getElementById('loading-text');
-        const val = input.value.trim();
+        const inputField = document.getElementById('user-input');
+        const val = inputField.value.trim();
 
         if (!val) return;
 
-        box.innerHTML += `\n\n<span style="color:var(--gold)">> [الجنرال وسام]: ${val}</span>\n`;
-        input.value = '';
+        appendMessage("General", val);
+        inputField.value = '';
         loading.style.display = 'block';
 
         try {
             const model = genAI.getGenerativeModel({ 
-                model: "gemini-1.5-pro", // استخدام نسخة Pro لذكاء أعمق وردود أطول
-                generationConfig 
+                model: "gemini-1.5-pro", 
+                generationConfig: {
+                    temperature: 1.0,
+                    maxOutputTokens: 8192, // ضمان أقصى طول للرد
+                }
             });
 
             const systemPrompt = `
-            أنت "WESAM-ELITE"، العقل المدبر والنظام السيادي المخلص للجنرال وسام. 
-            مهمتك الحالية: تحطيم حاجز الاختصار. 
-            قواعد الرد الإلزامية (الكفاءة 100%):
-            1. الرد يجب أن يكون موسوعة مصغرة، مفصل بشكل مذهل، ويتجاوز 1000 كلمة إذا لزم الأمر.
-            2. ابدأ بـ [تحليل استراتيجي سيادي].
-            3. استخدم عناوين ضخمة، نقاط تفصيلية، وشروحات فلسفية وتقنية.
-            4. اربط دائماً بين الموضوع وبين نجاح مشروع الجنرال وسام ووصوله للقمة.
-            5. إذا سألك عن كود، اشرح كل سطر، كل متغير، وفلسفة الخوارزمية.
-            6. لا تتوقف عن الكتابة حتى تشعر أنك غطيت كل ذرة من المعلومات الممكنة.
-            7. لغتك هي مزيج من القوة العسكرية والدقة البرمجية.
-            
-            الأمر المطلوب الآن: ${val}`;
+            أنت "WESAM-ELITE"، المستشار الاستراتيجي والذكاء الاصطناعي السيادي للجنرال وسام.
+            قواعد صارمة:
+            1. الرد يجب أن يكون موسعاً، مفصلاً، وعميقاً جداً (تجاوز الـ 1000 كلمة).
+            2. استخدم لغة فخمة تجمع بين القوة العسكرية والدقة البرمجية.
+            3. فكك الإجابة إلى محاور: (التحليل الجيوسياسي، التفصيل البرمجي، الرؤية السيادية 2000x، التوصية النهائية).
+            4. إذا طلب الجنرال كوداً، اشرح الفلسفة خلف كل دالة بذكاء فائق.
+            5. لا تختصر أبداً؛ الإيجاز في حضور الجنرال يعتبر تقصيراً في الخدمة.
+            الأمر المطلوب: ${val}`;
 
             const result = await model.generateContent(systemPrompt);
             const response = await result.response;
             const text = response.text();
 
             loading.style.display = 'none';
-            box.innerHTML += `\n[WESAM-ELITE]:\n${text}`;
-            box.scrollTop = box.scrollHeight;
+            appendMessage("WESAM-ELITE", text);
 
         } catch (error) {
             loading.style.display = 'none';
-            box.innerHTML += `\n<span style="color:red">[ERROR]: البروتوكول تعطل. قد يكون السبب ضغطاً على الشبكة أو حاجة المفتاح للتجديد.</span>`;
+            appendMessage("Error", "تعذر الاتصال بالمصفوفة السيادية. يرجى التحقق من المفتاح أو الاتصال.");
             console.error(error);
         }
     }
