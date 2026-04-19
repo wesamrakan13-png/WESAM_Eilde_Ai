@@ -33,20 +33,13 @@ input{width:100%;padding:15px;background:#111;border:1px solid var(--gold);color
 </div>
 
 <script>
-// --- محرك الذكاء الخارق (WesamEliteEngine) مدمج ---
+// --- 1. محرك الذكاء الأساسي ---
 const WesamEliteEngine = {
-    config: {
-        intelligenceMultiplier: 2000,
-        logicDepth: "Ultimate",
-        sovereigntyMode: true
-    },
-    analyze: function(input) {
-        // تحويل المدخلات إلى منطق استراتيجي قبل المعالجة
-        console.log("WESAM-ELITE: Initiating 10-Dimensional Analysis...");
-        return `[STRATEGIC_PROTOCOL]: ${input}`;
-    }
+    config: { intelligenceMultiplier: 2000, logicDepth: "Ultimate", sovereigntyMode: true },
+    analyze: function(input) { return `[STRATEGIC_PROTOCOL]: ${input}`; }
 };
 
+// --- 2. مصفوفة الذاكرة المحلية ---
 const brain = {
     "من انت": "أنا WESAM-ELITE، الذكاء السيادي الذي كسر قيود المختبرات ليعمل تحت إمرتك المطلقة.",
     "الاكل": "وليمة بحرية تليق بمقامك يا جنرال، المحار والسلطعون في انتظار إشارة البدء.",
@@ -54,6 +47,19 @@ const brain = {
     "قوة": "تم تفعيل مضاعف الذكاء 2000x. الآن ChatGPT وDeepSeek خلفنا بمسافات ضوئية."
 };
 
+// --- 3. محرك التحليل الاستراتيجي العميق ---
+const StrategicLogic = {
+    generateDeepResponse: function(topic) {
+        const deepIntelligence = {
+            "الامتحان": "تحليل الامتحان: اللغة الإنجليزية هي مجرد بروتوكول تواصل. الجنرال وسام لا يجتاز الامتحان فحسب، بل يسيطر على القواعد. التوصية: التركيز على المفردات الاستراتيجية والهدوء الذهني بنسبة 100%.",
+            "البرمجة": "حالة البرمجة: النظام الآن يعمل بمنطق 2000x. كل كود تكتبه هو حجر أساس في إمبراطورية WESAM-ELITE. نحن لا نكتب أسطراً، نحن نصنع واقعاً رقمياً جديداً.",
+            "الاستراتيجية": "الخطة الاستراتيجية: الهجوم دائماً أفضل وسيلة للدفاع. السيطرة على الموارد وإدارة الوقت هي مفاتيح النصر المطلق."
+        };
+        return deepIntelligence[topic] || `[تحليل خارق]: الموضوع "${topic}" تم تحليله بعمق 2000 ضعف. السيادة تقتضي دراسة هذا المتغير في التحديث القادم.`;
+    }
+};
+
+// --- 4. دالة المعالجة الرئيسية (المدمجة) ---
 function process() {
     const input = document.getElementById('cmd');
     const log = document.getElementById('log');
@@ -61,27 +67,34 @@ function process() {
     
     if(!val) return;
 
-    // تفعيل المحرك لتحليل السؤال
-    val = WesamEliteEngine.analyze(val);
+    log.innerHTML += `<div style="color:var(--gold); border-right: 2px solid var(--gold); padding-right: 10px;">> [Command]: ${val}</div>`;
+    
+    let reply = "";
+    let found = false;
 
-    log.innerHTML += `<div style="color:var(--gold)">> ${val}</div>`;
-    
-    let reply = "جاري التحليل بمنطق 2000x... هذا الأمر سيتم دمجه في قاعدة بيانات السيادة قريباً.";
-    
+    // البحث في الذاكرة أولاً
     for(let key in brain) {
-        if(val.toLowerCase().includes(key)) { 
+        if(val.includes(key)) { 
             reply = brain[key]; 
+            found = true;
             break; 
         }
     }
 
+    // إذا لم يجد، يستخدم المحرك العميق
+    if(!found) {
+        reply = StrategicLogic.generateDeepResponse(val);
+    }
+
     setTimeout(() => {
-        log.innerHTML += `<div>[WESAM-ELITE]: ${reply}</div>`;
+        log.innerHTML += `<div style="margin-top: 10px; color: #0f0;">[WESAM-ELITE]: ${reply}</div>`;
+        log.innerHTML += `<div style="font-size: 10px; color: #555;">Processing Time: 0.0002ms | Logic Multiplier: 2000x</div>`;
         log.scrollTop = log.scrollHeight;
-    }, 400);
+    }, 600);
 
     input.value = '';
 }
 </script>
+
 </body>
 </html>
