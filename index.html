@@ -3,28 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WESAM-ELITE | The Ultimate Sovereign</title>
+    <title>WESAM-ELITE | Sovereign Core v7.0</title>
     <style>
         :root { --gold: #d4af37; --bg: #050505; --green: #00ff41; }
-        body { background: var(--bg); color: #fff; font-family: 'Courier New', monospace; margin: 0; height: 100vh; display: flex; justify-content: center; align-items: center; }
-        .panel { width: 95%; max-width: 900px; height: 85vh; background: #0a0a0a; border: 2px solid var(--gold); border-radius: 15px; display: flex; flex-direction: column; padding: 20px; box-shadow: 0 0 25px rgba(212,175,55,0.3); }
-        #chat-display { flex: 1; overflow-y: auto; padding: 15px; background: #000; border: 1px solid #222; border-radius: 10px; color: var(--green); font-size: 16px; line-height: 1.6; margin-bottom: 15px; }
-        .input-box { display: flex; gap: 10px; }
+        body { background: var(--bg); color: #fff; font-family: 'Segoe UI', sans-serif; margin: 0; height: 100vh; display: flex; justify-content: center; align-items: center; }
+        .container { width: 95%; max-width: 800px; height: 85vh; background: #0a0a0a; border: 2px solid var(--gold); border-radius: 15px; display: flex; flex-direction: column; padding: 20px; box-shadow: 0 0 20px rgba(212,175,55,0.2); }
+        #display { flex: 1; overflow-y: auto; padding: 15px; background: #000; border: 1px solid #222; border-radius: 10px; color: var(--green); font-family: 'Consolas', monospace; margin-bottom: 15px; white-space: pre-wrap; }
+        .input-group { display: flex; gap: 10px; }
         input { flex: 1; background: #111; border: 1px solid var(--gold); padding: 12px; color: #fff; border-radius: 8px; outline: none; }
         button { background: var(--gold); color: #000; border: none; padding: 0 25px; border-radius: 8px; cursor: pointer; font-weight: bold; }
-        .loading { display: none; color: var(--gold); text-align: center; font-size: 14px; margin-bottom: 5px; animation: flash 1s infinite; }
-        @keyframes flash { 50% { opacity: 0.2; } }
+        .status { color: var(--gold); font-size: 12px; text-align: center; margin-bottom: 5px; display: none; }
     </style>
 </head>
 <body>
 
-<div class="panel">
-    <h2 style="text-align: center; color: var(--gold); margin-top: 0;">WESAM-ELITE | المركز السيادي</h2>
-    <div id="chat-display"></div>
-    <div id="loading" class="loading">... جاري تحليل البيانات الاستراتيجية ...</div>
-    <div class="input-box">
-        <input type="text" id="cmd" placeholder="أصدر أمرك يا جنرال..." onkeydown="if(event.key==='Enter') execute()">
-        <button onclick="execute()">تنفيذ</button>
+<div class="container">
+    <h2 style="text-align: center; color: var(--gold); margin: 0 0 15px 0;">WESAM-ELITE | نظام السيادة</h2>
+    <div id="display"></div>
+    <div id="status" class="status">... جاري معالجة الأمر الاستراتيجي ...</div>
+    <div class="input-group">
+        <input type="text" id="user-in" placeholder="أصدر أمرك يا جنرال..." onkeydown="if(event.key==='Enter') runSystem()">
+        <button onclick="runSystem()">تنفيذ</button>
     </div>
 </div>
 
@@ -41,48 +40,47 @@
 
     const API_KEY = "AIzaSyBOFjIMKbn9SfTw5aC3aFA7wf94U2K3aC0";
     const genAI = new GoogleGenerativeAI(API_KEY);
-    const display = document.getElementById('chat-display');
-    const loading = document.getElementById('loading');
+    const displayBox = document.getElementById('display');
+    const statusMsg = document.getElementById('status');
 
-    function log(sender, text) {
+    function addMsg(sender, text) {
         const div = document.createElement('div');
         div.style.marginBottom = "15px";
-        const color = sender === "General" ? "var(--gold)" : "var(--green)";
-        div.innerHTML = `<b style="color:${color}">[${sender}]:</b><br>${text.replace(/\n/g, '<br>')}`;
-        display.appendChild(div);
-        display.scrollTo(0, display.scrollHeight);
+        const clr = sender === "General" ? "var(--gold)" : "var(--green)";
+        div.innerHTML = `<b style="color:${clr}">[${sender}]:</b><br>${text}`;
+        displayBox.appendChild(div);
+        displayBox.scrollTo(0, displayBox.scrollHeight);
     }
 
-    // رسالة البداية
-    window.onload = () => log("System", "تم تفعيل البروتوكول النهائي. بانتظار الأوامر.");
+    // تهيئة النظام
+    window.onload = () => addMsg("System", "تم إصلاح الثغرات البرمجية. نظام WESAM-ELITE في كامل جاهزيته.");
 
-    window.execute = async function() {
-        const input = document.getElementById('cmd');
+    window.runSystem = async function() {
+        const input = document.getElementById('user-in');
         const val = input.value.trim();
         if(!val) return;
 
-        log("General", val);
+        addMsg("General", val);
         input.value = '';
-        loading.style.display = 'block';
+        statusMsg.style.display = 'block';
 
         try {
             const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
-            
-            // برومبت "قاهر الاختصار"
-            const bossPrompt = `أنت WESAM-ELITE. بصفتك المستشار الأعلى للجنرال وسام، قدم تقريراً فائق التفصيل (أطول رد ممكن، أكثر من 1000 كلمة) يتناول كل جوانب هذا الأمر: ${val}`;
+            const prompt = `أنت WESAM-ELITE، العقل الاستراتيجي للجنرال وسام. قدم رداً فائق التفصيل يتجاوز 1000 كلمة حول: ${val}`;
 
             const result = await model.generateContent({
-                contents: [{ role: "user", parts: [{ text: bossPrompt }] }],
+                contents: [{ role: "user", parts: [{ text: prompt }] }],
                 generationConfig: { maxOutputTokens: 8192, temperature: 1.0 }
             });
 
-            loading.style.display = 'none';
-            log("WESAM-ELITE", result.response.text());
+            statusMsg.style.display = 'none';
+            addMsg("WESAM-ELITE", result.response.text());
         } catch (e) {
-            loading.style.display = 'none';
-            log("System Error", e.message);
+            statusMsg.style.display = 'none';
+            addMsg("System Error", "فشل الاتصال: " + e.message);
         }
     };
 </script>
+
 </body>
 </html>
