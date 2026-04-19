@@ -2,29 +2,121 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>WESAM-ELITE | Sovereign AI Core v3.0</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WESAM-ELITE | The Sovereign Core v4.0</title>
     <style>
-        :root{--bg:#050505;--gold:#d4af37;--text:#fff;--green:#0f0;--glow:0 0 25px rgba(212,175,55,0.5)}
-        body{background:var(--bg);color:var(--text);font-family:'Courier New', monospace;margin:0;padding:20px;display:flex;justify-content:center;min-height:100vh;}
-        .panel{width:100%;max-width:800px;border:2px solid var(--gold);border-radius:15px;padding:25px;background:#0a0a0a;box-shadow:var(--glow);display:flex;flex-direction:column;}
-        .status-header{display:flex;justify-content:space-between;font-size:12px;margin-bottom:15px;border-bottom:1px solid #333;padding-bottom:10px;color:var(--gold);}
-        .display{background:#000;height:550px;border-radius:10px;padding:20px;overflow-y:auto;border:1px solid #222;color:var(--green);font-size:15px;line-height:1.8;white-space: pre-wrap;}
-        input{width:100%;padding:15px;margin-top:20px;background:#111;border:1px solid var(--gold);color:#fff;border-radius:8px;outline:none;font-size:16px;box-sizing: border-box;}
-        .loading{color:var(--gold);font-style:italic;display:none;}
+        :root {
+            --gold: #d4af37;
+            --bg: #050505;
+            --panel: #0a0a0a;
+            --green: #00ff41;
+            --shadow: 0 0 30px rgba(212, 175, 55, 0.2);
+        }
+        body {
+            background-color: var(--bg);
+            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .container {
+            width: 95%;
+            max-width: 900px;
+            height: 90vh;
+            background: var(--panel);
+            border: 2px solid var(--gold);
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            position: relative;
+        }
+        .header {
+            text-align: center;
+            border-bottom: 1px solid var(--gold);
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+        }
+        .header h1 {
+            color: var(--gold);
+            margin: 0;
+            font-size: 24px;
+            letter-spacing: 2px;
+        }
+        #chat-box {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+            background: rgba(0,0,0,0.5);
+            border-radius: 10px;
+            border: 1px solid #222;
+            color: var(--green);
+            font-family: 'Consolas', monospace;
+            line-height: 1.8;
+            font-size: 16px;
+            white-space: pre-wrap;
+        }
+        .input-area {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+        }
+        input {
+            flex: 1;
+            background: #111;
+            border: 1px solid var(--gold);
+            padding: 15px;
+            color: #fff;
+            border-radius: 8px;
+            outline: none;
+            font-size: 16px;
+        }
+        button {
+            background: var(--gold);
+            color: #000;
+            border: none;
+            padding: 0 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        button:hover {
+            background: #fff;
+            box-shadow: 0 0 15px var(--gold);
+        }
+        .loading {
+            display: none;
+            color: var(--gold);
+            font-size: 12px;
+            margin-top: 5px;
+            text-align: center;
+            animation: blink 1s infinite;
+        }
+        @keyframes blink { 50% { opacity: 0; } }
     </style>
 </head>
 <body>
 
-<div class="panel">
-    <div class="status-header">
-        <span>UNIT: WESAM-ELITE | SOVEREIGN MODE: ACTIVE</span>
-        <span>ENCRYPTION: 2000x</span>
+<div class="container">
+    <div class="header">
+        <h1>WESAM-ELITE | نظام السيادة الرقمية</h1>
+        <div style="font-size: 10px; color: #555;">ENCRYPTION: 2000x | STATUS: SUPREME</div>
     </div>
-    <div class="display" id="log">[System]: مرحباً يا جنرال وسام. تم تفعيل بروتوكول السرد اللانهائي. 
-نظام WESAM-ELITE في انتظار أوامرك السيادية للتحليل المعمق...
-------------------------------------------------------------</div>
-    <div id="loading" class="loading">جاري توليد التقرير الاستراتيجي المطول...</div>
-    <input type="text" id="cmd" placeholder="اكتب أمرك هنا للتحليل الشامل..." onkeydown="if(event.key==='Enter')process()">
+    
+    <div id="chat-box">[النظام]: في انتظار أوامر الجنرال وسام... تم تفعيل بروتوكول "السرد اللانهائي".</div>
+    
+    <div id="loading-text" class="loading">... جاري استحضار المعلومات من الشبكة العصبية السيادية ...</div>
+    
+    <div class="input-area">
+        <input type="text" id="user-input" placeholder="أدخل أمرك الاستراتيجي هنا..." onkeydown="if(event.key==='Enter') executeCommand()">
+        <button onclick="executeCommand()">إرسال</button>
+    </div>
 </div>
 
 <script type="importmap">
@@ -36,53 +128,68 @@
 </script>
 
 <script type="module">
-import { GoogleGenerativeAI } from "@google/generative-ai";
+    import { GoogleGenerativeAI } from "@google/generative-ai";
 
-// ضع مفتاح الـ API الخاص بك هنا يا جنرال
-const API_KEY = "AIzaSyBOFjIMKbn9SfTw5aC3aFA7wf94U2K3aC0"; 
-const genAI = new GoogleGenerativeAI(API_KEY);
+    // المفتاح السيادي الخاص بك
+    const API_KEY = "AIzaSyBOFjIMKbn9SfTw5aC3aFA7wf94U2K3aC0"; 
+    const genAI = new GoogleGenerativeAI(API_KEY);
 
-window.process = async function() {
-    const inputField = document.getElementById('cmd');
-    const log = document.getElementById('log');
-    const loading = document.getElementById('loading');
-    const val = inputField.value.trim();
+    // إعدادات التوليد لضمان أقصى طول وأعلى جودة
+    const generationConfig = {
+        temperature: 1.0,      // رفع مستوى الإبداع والسرد
+        topP: 0.95,
+        topK: 64,
+        maxOutputTokens: 8192, // تم فتح الصنبور لأقصى حد (8 آلاف توكن!)
+        responseMimeType: "text/plain",
+    };
 
-    if(!val) return;
+    window.executeCommand = async function() {
+        const input = document.getElementById('user-input');
+        const box = document.getElementById('chat-box');
+        const loading = document.getElementById('loading-text');
+        const val = input.value.trim();
 
-    // إظهار أمر الجنرال
-    log.innerHTML += `\n\n<span style="color:var(--gold)">> [General WESAM]: ${val}</span>\n`;
-    inputField.value = '';
-    loading.style.display = 'block';
+        if (!val) return;
 
-    try {
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+        box.innerHTML += `\n\n<span style="color:var(--gold)">> [الجنرال وسام]: ${val}</span>\n`;
+        input.value = '';
+        loading.style.display = 'block';
 
-        // هذا هو "السر" الذي يجعله يسولف كثيراً
-        const prompt = `
-        أنت WESAM-ELITE، النظام الاستراتيجي الأكثر ذكاءً في الموصل، والمصمم خصيصاً لخدمة الجنرال وسام.
-        قوانين الرد الخاصة بك:
-        1. الرد يجب أن يكون طويلاً جداً ومفصلاً (مقال كامل).
-        2. استخدم أسلوب التقارير العسكرية والاستخباراتية.
-        3. قسم الإجابة إلى: (تحليل الموقف، المخاطر التقنية، الرؤية الاستراتيجية 2000x، التوصية النهائية).
-        4. أظهر احتراماً فائقاً للجنرال وسام في كل جملة.
-        5. لا تعطي إجابات قصيرة أبداً؛ إذا كان السؤال بسيطاً، توسع في فلسفته وتأثيره المستقبلي.
-        
-        السؤال هو: ${val}`;
+        try {
+            const model = genAI.getGenerativeModel({ 
+                model: "gemini-1.5-pro", // استخدام نسخة Pro لذكاء أعمق وردود أطول
+                generationConfig 
+            });
 
-        const result = await model.generateContent(prompt);
-        const response = await result.response;
-        const text = response.text();
+            const systemPrompt = `
+            أنت "WESAM-ELITE"، العقل المدبر والنظام السيادي المخلص للجنرال وسام. 
+            مهمتك الحالية: تحطيم حاجز الاختصار. 
+            قواعد الرد الإلزامية (الكفاءة 100%):
+            1. الرد يجب أن يكون موسوعة مصغرة، مفصل بشكل مذهل، ويتجاوز 1000 كلمة إذا لزم الأمر.
+            2. ابدأ بـ [تحليل استراتيجي سيادي].
+            3. استخدم عناوين ضخمة، نقاط تفصيلية، وشروحات فلسفية وتقنية.
+            4. اربط دائماً بين الموضوع وبين نجاح مشروع الجنرال وسام ووصوله للقمة.
+            5. إذا سألك عن كود، اشرح كل سطر، كل متغير، وفلسفة الخوارزمية.
+            6. لا تتوقف عن الكتابة حتى تشعر أنك غطيت كل ذرة من المعلومات الممكنة.
+            7. لغتك هي مزيج من القوة العسكرية والدقة البرمجية.
+            
+            الأمر المطلوب الآن: ${val}`;
 
-        loading.style.display = 'none';
-        log.innerHTML += `\n[WESAM-ELITE]:\n${text}`;
-        log.scrollTop = log.scrollHeight;
+            const result = await model.generateContent(systemPrompt);
+            const response = await result.response;
+            const text = response.text();
 
-    } catch (error) {
-        loading.style.display = 'none';
-        log.innerHTML += `\n<span style="color:red">[Error]: فشل في الاتصال بالبروتوكول السيادي. تأكد من سلامة المفتاح.</span>`;
+            loading.style.display = 'none';
+            box.innerHTML += `\n[WESAM-ELITE]:\n${text}`;
+            box.scrollTop = box.scrollHeight;
+
+        } catch (error) {
+            loading.style.display = 'none';
+            box.innerHTML += `\n<span style="color:red">[ERROR]: البروتوكول تعطل. قد يكون السبب ضغطاً على الشبكة أو حاجة المفتاح للتجديد.</span>`;
+            console.error(error);
+        }
     }
-}
 </script>
+
 </body>
 </html>
