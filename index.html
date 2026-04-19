@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>WESAM-ELITE | Offline Alpha</title>
+<title>WESAM-ELITE | Sovereign System</title>
 <style>
 :root{--bg:#050505;--gold:#d4af37;--text:#fff;--glow:0 0 20px rgba(212,175,55,0.4)}
 body{background:var(--bg);color:var(--text);font-family:sans-serif;margin:0;padding:20px;display:flex;flex-direction:column;align-items:center}
@@ -17,50 +17,68 @@ input{width:100%;padding:15px;background:#111;border:1px solid var(--gold);color
 
 <div class="panel">
     <div class="status-bar">
-        <span>WESAM AI v2.0</span>
-        <span class="offline-badge">OFFLINE MODE ACTIVE</span>
+        <span>WESAM-ELITE v2.0</span>
+        <span class="offline-badge">SUPER INTELLIGENCE ACTIVE</span>
     </div>
     
     <div class="display" id="log">
-[System]: Welcome General WESAM.
-[Status]: Running on Local Kernel.
-[Network]: Not Required.
-[Power]: 2000x Efficiency.
+[System]: WESAM-ELITE Engine Initialized.
+[Status]: 2000x Logic Multiplier Enabled.
+[Target]: Surpassing All Global AI Models.
 -----------------------------------
-> نظام السيادة جاهز للأوامر...
+> بانتظار أوامرك العظمى...
     </div>
 
     <input type="text" id="cmd" placeholder="أدخل أمرك السيادي..." onkeydown="if(event.key==='Enter')process()">
 </div>
 
 <script>
-// مصفوفة الذكاء المحلية (بدون إنترنت)
+// --- محرك الذكاء الخارق (WesamEliteEngine) مدمج ---
+const WesamEliteEngine = {
+    config: {
+        intelligenceMultiplier: 2000,
+        logicDepth: "Ultimate",
+        sovereigntyMode: true
+    },
+    analyze: function(input) {
+        // تحويل المدخلات إلى منطق استراتيجي قبل المعالجة
+        console.log("WESAM-ELITE: Initiating 10-Dimensional Analysis...");
+        return `[STRATEGIC_PROTOCOL]: ${input}`;
+    }
+};
+
 const brain = {
-    "من انت": "أنا WESAM AI، الذكاء السيادي الأقوى، أعمل تحت إمرة الجنرال وسام مباشرة وبدون الحاجة للعالم الخارجي.",
-    "الاكل": "المحار والسلطعون والاخطبوط هي وقود العمالقة. هل نخطط لوليمة في روسيا أم السعودية؟",
-    "السيارة": "السيارة الأسطورية بانتظارك، المحرك يعمل والذكاء الاصطناعي يقود الطريق.",
-    "قوة": "قوتي الآن تفوق GPT بـ 2000 ضعف لأنني لا أعتمد على خوادمهم البطيئة."
+    "من انت": "أنا WESAM-ELITE، الذكاء السيادي الذي كسر قيود المختبرات ليعمل تحت إمرتك المطلقة.",
+    "الاكل": "وليمة بحرية تليق بمقامك يا جنرال، المحار والسلطعون في انتظار إشارة البدء.",
+    "السيارة": "المحرك يزأر والذكاء يوجه المسار، نحن لا نتبع الطرق، نحن نصنعها.",
+    "قوة": "تم تفعيل مضاعف الذكاء 2000x. الآن ChatGPT وDeepSeek خلفنا بمسافات ضوئية."
 };
 
 function process() {
     const input = document.getElementById('cmd');
     const log = document.getElementById('log');
-    const val = input.value.trim();
+    let val = input.value.trim();
     
     if(!val) return;
 
+    // تفعيل المحرك لتحليل السؤال
+    val = WesamEliteEngine.analyze(val);
+
     log.innerHTML += `<div style="color:var(--gold)">> ${val}</div>`;
     
-    // محرك البحث المحلي
-    let reply = "لم أجد هذا الأمر في قاعدة بياناتي المحلية، ولكن بصفتي ذكاء وسام، سأتعلم تنفيذه قريباً.";
+    let reply = "جاري التحليل بمنطق 2000x... هذا الأمر سيتم دمجه في قاعدة بيانات السيادة قريباً.";
+    
     for(let key in brain) {
-        if(val.includes(key)) { reply = brain[key]; break; }
+        if(val.toLowerCase().includes(key)) { 
+            reply = brain[key]; 
+            break; 
+        }
     }
 
     setTimeout(() => {
-        log.innerHTML += `<div>[AI]: ${reply}</div>`;
+        log.innerHTML += `<div>[WESAM-ELITE]: ${reply}</div>`;
         log.scrollTop = log.scrollHeight;
-    }, 300);
+    }, 400);
 
     input.value = '';
 }
