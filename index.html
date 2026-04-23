@@ -1,63 +1,191 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WESAM AI</title>
+    <title>WESAM ELITE AI</title>
     <style>
-        body { font-family: sans-serif; background: #1a1a1a; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        #chat-container { width: 400px; background: #2d2d2d; border-radius: 10px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        h2 { text-align: center; color: #00ffcc; border-bottom: 2px solid #00ffcc; padding-bottom: 10px; }
-        #messages { height: 300px; overflow-y: auto; border: 1px solid #444; padding: 10px; margin-bottom: 10px; display: flex; flex-direction: column; }
-        .msg { margin-bottom: 10px; padding: 8px; border-radius: 5px; max-width: 80%; }
-        .user { align-self: flex-end; background: #007bff; }
-        .ai { align-self: flex-start; background: #444; color: #00ffcc; font-weight: bold; }
-        input { width: 80%; padding: 10px; border-radius: 5px; border: none; }
-        button { width: 15%; padding: 10px; background: #00ffcc; border: none; cursor: pointer; border-radius: 5px; }
+        :root {
+            --primary: #00ffcc;
+            --bg: #0a0a0a;
+            --panel: #161616;
+            --text: #e0e0e0;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        #ai-interface {
+            width: 90%;
+            max-width: 600px;
+            height: 80vh;
+            background: var(--panel);
+            border: 1px solid #333;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+            border-top: 3px solid var(--primary);
+        }
+
+        #chat-header {
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            letter-spacing: 2px;
+            color: var(--primary);
+            text-transform: uppercase;
+            border-bottom: 1px solid #333;
+        }
+
+        #display-area {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            scrollbar-width: thin;
+        }
+
+        .message {
+            max-width: 85%;
+            padding: 12px 18px;
+            border-radius: 10px;
+            line-height: 1.6;
+            word-wrap: break-word;
+            white-space: pre-wrap; /* يمنع ضياع المسافات واحتراق الكلمات */
+        }
+
+        .user-msg {
+            align-self: flex-start;
+            background: #222;
+            border-right: 3px solid var(--primary);
+        }
+
+        .ai-msg {
+            align-self: flex-end;
+            background: #1e1e1e;
+            color: var(--primary);
+            border-left: 3px solid var(--primary);
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        #input-zone {
+            padding: 20px;
+            display: flex;
+            gap: 10px;
+            border-top: 1px solid #333;
+        }
+
+        input {
+            flex: 1;
+            background: #000;
+            border: 1px solid #444;
+            color: white;
+            padding: 12px;
+            border-radius: 5px;
+            outline: none;
+        }
+
+        input:focus { border-color: var(--primary); }
+
+        button {
+            background: var(--primary);
+            color: black;
+            border: none;
+            padding: 0 20px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover { opacity: 0.8; transform: scale(1.05); }
     </style>
 </head>
 <body>
 
-<div id="chat-container">
-    <h2>WESAM AI</h2>
-    <div id="messages"></div>
-    <div style="display: flex; justify-content: space-between;">
-        <input type="text" id="userInput" placeholder="اسأل وسام...">
-        <button onclick="askWesam()">إرسال</button>
+<div id="ai-interface">
+    <div id="chat-header">WESAM ELITE AI [v1.0]</div>
+    <div id="display-area"></div>
+    <div id="input-zone">
+        <input type="text" id="userInput" placeholder="أدخل الأوامر يا جنرال..." onkeypress="handleKey(event)">
+        <button onclick="processInput()">إرسال</button>
     </div>
 </div>
 
 <script>
-    function askWesam() {
-        const input = document.getElementById("userInput");
-        const msgDiv = document.getElementById("messages");
-        
-        if (input.value.trim() === "") return;
+    const displayArea = document.getElementById('display-area');
+    const userInput = document.getElementById('userInput');
+
+    function handleKey(e) {
+        if (e.key === 'Enter') processInput();
+    }
+
+    function processInput() {
+        const text = userInput.value.trim();
+        if (!text) return;
 
         // إضافة رسالة المستخدم
-        msgDiv.innerHTML += `<div class="msg user">${input.value}</div>`;
-        
-        let response = "";
-        const query = input.value.toLowerCase();
+        appendMessage(text, 'user-msg');
+        userInput.value = '';
 
-        // منطق "عقل" WESAM AI
-        if (query.includes("من أنت")) {
-            response = "أنا WESAM AI، الذكاء الاصطناعي الخاص بالمبرمج وسام، أنا هنا للسيطرة على الكود!";
-        } else if (query.includes("مشروع") || query.includes("لعبة")) {
-            response = "المشروع القادم سيكون أسطورياً، نحن الآن في مرحلة البرمجة المتقدمة.";
-        } else if (query.includes("ذكاء")) {
-            response = "ذكائي مستمد من عقلية وسام الاستراتيجية (92/100)!";
+        // رد WESAM ELITE AI
+        generateEliteResponse(text);
+    }
+
+    function appendMessage(text, className) {
+        const msgDiv = document.createElement('div');
+        msgDiv.className = `message ${className}`;
+        msgDiv.textContent = text;
+        displayArea.appendChild(msgDiv);
+        displayArea.scrollTop = displayArea.scrollHeight;
+        return msgDiv;
+    }
+
+    function generateEliteResponse(input) {
+        let response = "";
+        const cmd = input.toLowerCase();
+
+        if (cmd.includes("من انت") || cmd.includes("who")) {
+            response = "أنا WESAM ELITE AI. تم تطويري بواسطة وسام لأكون العقل المدبر لأعظم المشاريع البرمجية.";
+        } else if (cmd.includes("حرب") || cmd.includes("استراتيجية")) {
+            response = "الاستراتيجية الحالية: السيطرة الكاملة على الكود ورفع الكفاءة إلى 100%. لا مجال للخطأ.";
+        } else if (cmd.includes("مشكلة") || cmd.includes("كلمات")) {
+            response = "تم تفعيل بروتوكول الاستقرار. لن يتم حرق أو أكل أي كلمة بعد الآن في هذا الكود.";
         } else {
-            response = "هذا سؤال مثير.. وسام لم يبرمجني للرد على هذا بعد، لكنه سيفعل قريباً.";
+            response = "جاري معالجة الطلب... النظام مستعد لتنفيذ أوامرك يا وسام.";
         }
 
-        // إضافة رد WESAM AI بعد تأخير بسيط ليظهر كأنه يفكر
-        setTimeout(() => {
-            msgDiv.innerHTML += `<div class="msg ai">WESAM AI: ${response}</div>`;
-            msgDiv.scrollTop = msgDiv.scrollHeight;
-        }, 500);
+        // إنشاء حاوية الرسالة فارغة للبدء بالكتابة
+        const aiMsgDiv = appendMessage("", 'ai-msg');
+        typeWriterEffect(aiMsgDiv, response);
+    }
 
-        input.value = "";
+    // المحرك الذي يمنع "أكل الكلمات"
+    function typeWriterEffect(element, text) {
+        let i = 0;
+        element.textContent = ""; // تأكيد المسح
+        
+        function type() {
+            if (i < text.length) {
+                element.textContent += text.charAt(i);
+                i++;
+                displayArea.scrollTop = displayArea.scrollHeight;
+                setTimeout(type, 40); // سرعة 40ms هي الأفضل للاستقرار
+            }
+        }
+        type();
     }
 </script>
 
