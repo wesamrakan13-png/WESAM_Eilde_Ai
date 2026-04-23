@@ -1,99 +1,65 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar">
 <head>
-  <meta charset="UTF-8" /><viewport content="width=device-width,initial-scale=1.0">
-  <title>WESAM-ELITE | Royal Academy</title>
-  <style>
-    :root{--bg:#050505;--panel:#0b0b0b;--gold:#d4af37;--gold-2:#f0d87a;--text:#fff;--muted:#b7b7b7;--line:rgba(212,175,55,.25);--shadow:0 0 30px rgba(212,175,55,.16);--radius:22px}
-    *{box-sizing:border-box}
-    /* تحسين عرض النص العربي ومنع البتر */
-    body{margin:0;padding:0;background:radial-gradient(circle at top,rgba(212,175,55,.1),transparent 35%),#040404;color:var(--text);font-family:Segoe UI,sans-serif;overflow-x:hidden;line-height:1.6}
-    .app{max-width:1400px;margin:0 auto;padding:24px}
-    .topbar{display:flex;gap:16px;align-items:center;justify-content:space-between;background:rgba(10,10,10,.88);border:1px solid var(--line);border-radius:var(--radius);padding:18px 22px;box-shadow:var(--shadow);backdrop-filter:blur(10px)}
-    .brand{display:flex;gap:14px;align-items:center}.emblem{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(145deg,rgba(212,175,55,.22),rgba(212,175,55,.06));border:1px solid rgba(212,175,55,.35);color:var(--gold);font-size:1.35rem}
-    .stats{display:flex;gap:14px;flex-wrap:wrap}.stat{min-width:110px;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:12px;text-align:center}
-    .stat .value{color:var(--gold);font-weight:700}
-    .hero{margin-top:22px;display:grid;grid-template-columns:1.2fr .8fr;gap:18px}
-    /* السماح للصناديق بالتوسع حسب محتوى الردود */
-    .card, .level, #roadmap {height:auto !important;min-height:min-content;overflow:visible !important;word-wrap:break-word;background:linear-gradient(180deg,rgba(17,17,17,.95),rgba(9,9,9,.95));border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px}
-    .bar{height:14px;border-radius:999px;background:#1a1a1a;overflow:hidden;border:1px solid rgba(212,175,55,.18);margin-top:10px}
-    .bar > span{display:block;height:100%;width:0%;background:linear-gradient(90deg,var(--gold),var(--gold-2));transition:width .35s ease}
-    .layout{margin-top:18px;display:grid;grid-template-columns:320px 1fr 360px;gap:18px;align-items:start}
-    .path-btn{width:100%;border:1px solid rgba(212,175,55,.2);background:#0d0d0d;color:#fff;padding:14px;border-radius:16px;cursor:pointer;text-align:right;margin-bottom:12px}
-    .path-btn.active{border-color:var(--gold);box-shadow:0 0 20px rgba(212,175,55,0.1)}
-    .level{background:rgba(13,13,13,0.95);margin-bottom:12px;padding:16px}.level.completed{border-color:#27d17f}.level.locked{opacity:0.5}
-    .btn{border:none;cursor:pointer;background:linear-gradient(180deg,var(--gold),#b88f23);color:#000;font-weight:800;padding:11px 14px;border-radius:12px}
-    .btn.secondary{background:#111;color:#fff;border:1px solid var(--line)}
-    .terminal{background:#020202;border:1px solid var(--line);border-radius:18px;padding:14px;min-height:320px;display:flex;flex-direction:column;gap:10px}
-    .screen{flex:1;background:#020202;padding:12px;color:#d7d7d7;overflow:auto;font-family:monospace;white-space:pre-wrap}
-    input,textarea{width:100%;background:#090909;color:#fff;border:1px solid var(--line);border-radius:12px;padding:12px;outline:none}
-    @media (max-width:1100px){.layout,.hero{grid-template-columns:1fr}}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WESAM AI</title>
+    <style>
+        body { font-family: sans-serif; background: #1a1a1a; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        #chat-container { width: 400px; background: #2d2d2d; border-radius: 10px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        h2 { text-align: center; color: #00ffcc; border-bottom: 2px solid #00ffcc; padding-bottom: 10px; }
+        #messages { height: 300px; overflow-y: auto; border: 1px solid #444; padding: 10px; margin-bottom: 10px; display: flex; flex-direction: column; }
+        .msg { margin-bottom: 10px; padding: 8px; border-radius: 5px; max-width: 80%; }
+        .user { align-self: flex-end; background: #007bff; }
+        .ai { align-self: flex-start; background: #444; color: #00ffcc; font-weight: bold; }
+        input { width: 80%; padding: 10px; border-radius: 5px; border: none; }
+        button { width: 15%; padding: 10px; background: #00ffcc; border: none; cursor: pointer; border-radius: 5px; }
+    </style>
 </head>
 <body>
-  <div class="app">
-    <div class="topbar">
-      <div class="brand"><div class="emblem">♛</div><div><h1>WESAM-ELITE</h1><p>Royal Academy</p></div></div>
-      <div class="stats">
-        <div class="stat"><span class="label">XP</span><div class="value" id="xpValue">0</div></div>
-        <div class="stat"><span class="label">Level</span><div class="value" id="globalLevel">1</div></div>
-      </div>
+
+<div id="chat-container">
+    <h2>WESAM AI</h2>
+    <div id="messages"></div>
+    <div style="display: flex; justify-content: space-between;">
+        <input type="text" id="userInput" placeholder="اسأل وسام...">
+        <button onclick="askWesam()">إرسال</button>
     </div>
-    <section class="hero">
-      <div class="card">
-        <h2>Learning Command Center</h2>
-        <div class="bar"><span id="overallBar"></span></div>
-        <p id="progressText" style="margin-top:8px;color:var(--muted)">0% completed</p>
-      </div>
-      <div class="card"><h3>Principles</h3><p class="lead">Offline-first, LocalStorage, No Truncation.</p></div>
-    </section>
-    <section class="layout">
-      <aside class="card">
-        <button class="path-btn active" onclick="setPath('languages')">Human Languages</button>
-        <button class="path-btn" onclick="setPath('technical')">Technical Skills</button>
-      </aside>
-      <main class="card"><div id="roadmap"></div></main>
-      <aside class="card sandbox">
-        <div class="terminal">
-          <div id="screen" class="screen">[Sandbox Initialized]</div>
-          <input id="cmdInput" placeholder="Command..." onkeypress="if(event.key==='Enter')runCmd()" />
-          <textarea id="codeBox" placeholder="Unlimited Notes..."></textarea>
-          <div style="display:flex;gap:5px"><button class="btn" onclick="saveNote()">Save</button><button class="btn secondary" onclick="loadNote()">Load</button></div>
-        </div>
-      </aside>
-    </section>
-  </div>
-  <script>
-    const KEY = 'wesam-elite-v2';
-    let st = JSON.parse(localStorage.getItem(KEY))||{p:'languages',xp:0,n:'',done:{languages:[],technical:[]}};
-    const cur = {
-      languages: [{id:'l1',t:'Foundation',x:50},{id:'l2',t:'Grammar',x:75}],
-      technical: [{id:'t1',t:'Logic',x:60},{id:'t2',t:'Web Dev',x:80}]
-    };
-    const save=()=>{localStorage.setItem(KEY,JSON.stringify(st))};
-    const render=()=>{
-      document.getElementById('xpValue').textContent=st.xp;
-      document.getElementById('globalLevel').textContent=1+Math.floor(st.xp/100);
-      const rd=document.getElementById('roadmap');rd.innerHTML='';
-      cur[st.p].forEach((l,i)=>{
-        const isD=st.done[st.p].includes(l.id), unl=i===0||st.done[st.p].includes(cur[st.p][i-1].id);
-        rd.innerHTML+=`<div class="level ${isD?'completed':''} ${unl?'':'locked'}">
-          <h4>${l.t}</h4><button class="btn" onclick="comp('${l.id}',${l.x})" ${(!unl||isD)?'disabled':''}>${isD?'Done':'Complete'}</button>
-        </div>`;
-      });
-      const total=cur.languages.length+cur.technical.length, dCount=st.done.languages.length+st.done.technical.length;
-      document.getElementById('overallBar').style.width=(dCount/total*100)+'%';
-      document.getElementById('progressText').textContent=Math.round(dCount/total*100)+'% completed';
-    };
-    window.comp=(id,x)=>{st.done[st.p].push(id);st.xp+=x;save();render()};
-    window.setPath=(p)=>{st.p=p;render()};
-    window.runCmd=()=>{
-      const i=document.getElementById('cmdInput'),s=document.getElementById('screen');
-      s.textContent+=`\n> ${i.value}`;if(i.value==='clear')s.textContent='';i.value='';s.scrollTop=s.scrollHeight;
-    };
-    window.saveNote=()=>{st.n=document.getElementById('codeBox').value;save();alert('Saved')};
-    window.loadNote=()=>{document.getElementById('codeBox').value=st.n};
-    render();
-  </script>
+</div>
+
+<script>
+    function askWesam() {
+        const input = document.getElementById("userInput");
+        const msgDiv = document.getElementById("messages");
+        
+        if (input.value.trim() === "") return;
+
+        // إضافة رسالة المستخدم
+        msgDiv.innerHTML += `<div class="msg user">${input.value}</div>`;
+        
+        let response = "";
+        const query = input.value.toLowerCase();
+
+        // منطق "عقل" WESAM AI
+        if (query.includes("من أنت")) {
+            response = "أنا WESAM AI، الذكاء الاصطناعي الخاص بالمبرمج وسام، أنا هنا للسيطرة على الكود!";
+        } else if (query.includes("مشروع") || query.includes("لعبة")) {
+            response = "المشروع القادم سيكون أسطورياً، نحن الآن في مرحلة البرمجة المتقدمة.";
+        } else if (query.includes("ذكاء")) {
+            response = "ذكائي مستمد من عقلية وسام الاستراتيجية (92/100)!";
+        } else {
+            response = "هذا سؤال مثير.. وسام لم يبرمجني للرد على هذا بعد، لكنه سيفعل قريباً.";
+        }
+
+        // إضافة رد WESAM AI بعد تأخير بسيط ليظهر كأنه يفكر
+        setTimeout(() => {
+            msgDiv.innerHTML += `<div class="msg ai">WESAM AI: ${response}</div>`;
+            msgDiv.scrollTop = msgDiv.scrollHeight;
+        }, 500);
+
+        input.value = "";
+    }
+</script>
+
 </body>
 </html>
